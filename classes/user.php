@@ -15,6 +15,16 @@ class User
         $this->table = 'users';
     }
 
+    function registration()
+    {
+        $query = "INSERT INTO " . $this->table . " (name, email, password) VALUES ('" . $this->name . "', '" . $this->email . "', '" . $this->password . "')";
+
+        if ($this->conn->query($query)) {
+            return true;
+        }
+        return false;
+    }
+
     function login()
     {
 

@@ -4,11 +4,6 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 
-# include jwt
-require "../vendor/autoload.php";
-
-use \Firebase\JWT\JWT;
-
 # include local files
 include_once '../config/database.php';
 include_once '../config/config.php';
@@ -18,36 +13,23 @@ $database = new Database();
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     # get input data
     $input_data = json_decode(file_get_contents("php://input"));
-    if (!empty($input_data->email) && !empty($input_data->password)) {
+    if (!empty($input_data->name) && !empty($input_data->email) && !empty($input_data->password)) {
 
         $db = $database->connect();
         $user = new User($db);
 
         # sanitize
+        $user->name = htmlspecialchars(strip_tags($input_data->name));
         $user->email = htmlspecialchars(strip_tags($input_data->email));
         $user->password = htmlspecialchars(strip_tags($input_data->password));
 
-        if ($user->login()) {
-
-            $payload = array(
-                "iss" => $issuer,
-                "iat" => $issued_at,
-                "exp" => $expiration_time,
-                "data" => array(
-                    "id" => $user->id,
-                    "name" => $user->name,
-                    "email" => $user->email
-                )
-            );
-            # generate JWT token
-            $jwt = JWT::encode($payload, $key);
+        if ($user->registration()) {
 
             http_response_code(200);
             echo json_encode(
                 array(
                     "status" => 1,
-                    "message" => "Login Successful.",
-                    "jwt" => $jwt
+                    "message" => "Registration Successful."
                 )
             );
         } else {
