@@ -14,13 +14,13 @@ include_once '../config/database.php';
 include_once '../config/config.php';
 include_once '../classes/user.php';
 $database = new Database();
+$db = $database->connect();
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     # get input data
     $input_data = json_decode(file_get_contents("php://input"));
     if (!empty($input_data->email) && !empty($input_data->password)) {
 
-        $db = $database->connect();
         $user = new User($db);
 
         # sanitize
