@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             http_response_code(400);
             echo json_encode(array(
                 "status" => 1,
-                "message" => "Login Failed."
+                "message" => "Registration Failed."
             ));
         }
     } else {
@@ -52,14 +52,4 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         "status" => 0,
         "message" => "Invalid Request."
     ));
-}
-
-$database = new Database();
-
-if (!empty($_POST['email']) && !empty($_POST['password'])) {
-
-    $db = $database->connect();
-    $user = new User($db);
-    $user->email = htmlspecialchars(strip_tags($_POST['email']));
-    $user->password = htmlspecialchars(strip_tags($_POST['password']));
 }

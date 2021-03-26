@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
         // personal notes
         $jwt =  $headers["Authorization"];
         try {
-            $auth_data = JWT::decode($jwt, $key);
+            $auth_data = JWT::decode($jwt, $key, array('HS256'));
             $notes->user_id = $auth_data->data->id;
             $my_notes = $notes->get_my_notes();
             if (!empty($my_notes)) {
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
         }
     } else {
         $public_notes = $notes->get_public_notes();
-        if (!empty($my_notes)) {
+        if (!empty($public_notes)) {
             http_response_code(200);
             echo json_encode(array(
                 "status" => 1,
